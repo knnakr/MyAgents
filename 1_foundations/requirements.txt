@@ -1,0 +1,11 @@
+requests
+python-dotenv
+gradio
+pypdf
+openai
+openai-agents
+groq
+fastapi
+uvicorn[standard]
+pydantic[email]
+python-telegram-bot
