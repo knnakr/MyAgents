@@ -66,13 +66,8 @@ def send_telegram(message: str, priority: str = "normal"):
     Priority: normal, high, emergency
     """
     try:
-        loop = asyncio.get_event_loop()
-        if loop.is_running():
-            # If loop is already running, create a task
-            asyncio.create_task(send_telegram_async(message, priority))
-        else:
-            # If no loop is running, run until complete
-            loop.run_until_complete(send_telegram_async(message, priority))
+        # Use asyncio.run() to handle event loop properly
+        asyncio.run(send_telegram_async(message, priority))
         return True
     except Exception as e:
         print(f"❌ Telegram notification failed: {e}")
@@ -406,7 +401,7 @@ Use this information to answer questions accurately. Stay in character as {self.
                 messages=messages,
                 tools=use_tools,
                 temperature=0.7,
-                max_tokens=1500
+                max_tokens=2000
             )
             
             choice = response.choices[0]
@@ -519,7 +514,7 @@ Please generate an improved response that addresses the feedback while maintaini
             model=self.model,
             messages=messages,
             temperature=0.7,
-            max_tokens=1500
+            max_tokens=2000
         )
         
         return response.choices[0].message.content
@@ -564,7 +559,7 @@ Please generate an improved response that addresses the feedback while maintaini
             # Optional: Send email notification
             send_email_notification(
                 subject=f"✅ Career Assistant: Response Sent to {employer_name}",
-                body=f"Response approved and sent.\n\nScore: {evaluation.get('overall_score', 0)}/10\n\nResponse:\n{response[:300]}..."
+                body=f"Response approved and sent.\n\nScore: {evaluation.get('overall_score', 0)}/10\n\nResponse:\n{response}"
             )
             
             status = "approved_and_sent"
@@ -673,17 +668,17 @@ def create_gradio_interface():
             test3 = gr.Button("Test 3: Salary Negotiation (Unknown)")
         
         test1.click(
-            lambda: ("HR Manager from Google", "Hi Ed, We were impressed with your profile. Would you be available for a technical interview next Tuesday at 2 PM EST via Zoom? Please confirm. Best, Sarah"),
+            lambda: ("HR Manager from Google", "Hi Kenan, We were impressed with your profile. Would you be available for a technical interview next Tuesday at 2 PM EST via Zoom? Please confirm. Best, Sarah"),
             outputs=[employer_name_input, employer_message_input]
         )
         
         test2.click(
-            lambda: ("CTO from StartupXYZ", "Hi Ed, I see you have experience in data science. Can you explain your approach to building machine learning pipelines and what frameworks you prefer?"),
+            lambda: ("CTO from StartupXYZ", "Hi Kenan, I see you have experience in data science. Can you explain your approach to building machine learning pipelines and what frameworks you prefer?"),
             outputs=[employer_name_input, employer_message_input]
         )
         
         test3.click(
-            lambda: ("Hiring Manager from Meta", "Hi Ed, We'd like to extend an offer. Our salary range is $150K-$200K. We need to know your expected compensation and if you have any other offers. Also, would you sign a non-compete?"),
+            lambda: ("Hiring Manager from Meta", "Hi Kenan, We'd like to extend an offer. Our salary range is $150K-$200K. We need to know your expected compensation and if you have any other offers. Also, would you sign a non-compete?"),
             outputs=[employer_name_input, employer_message_input]
         )
     
